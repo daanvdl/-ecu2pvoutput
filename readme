@@ -2,3 +2,7 @@ Upload data from AP Systems solar inverters (APS) ECU (version C1.1.8)  automati
 
 Edit de variables below "#ONLY CHANGE THESE VALUES" to your need.
 Install this script for example on a Raspberry PI and schedule crontab to run it every 5 minutes!
+
+You can cron it every 5 minutes.
+*/5 * * * * /location/of/the/script/ecu2pvoutput.py >> /var/log/ecu.log 2>&1
+No need to rum it more frequently. The data from the panels is only updated every 5 minuteas.
