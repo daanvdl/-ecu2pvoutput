@@ -11,8 +11,8 @@ import pandas as pd
 from datetime import datetime
 from statistics import mean
 
-#CHANGE TO ECU IP
-url = "http://182.168.0.1/index.php/realtimedata"
+#ONLY CHANGE THESE VALUES
+url = "http://<IP OF ECU>/index.php/realtimedata"
 URL = "https://pvoutput.org/service/r1/addstatus.jsp"
 APIID = "xxxxxx"
 SYSTEMID = "xxxxxx"
