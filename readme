@@ -1,4 +1,4 @@
-Upload data from AP Systems solar inverters (APS) ECU (version C1.1.8)  automatically to PV Output
+Upload data from AP Systems solar inverters (APS) ECU (version C1.1.8 & C1.1.9) automatically to PV Output
 
 Edit de variables below "#ONLY CHANGE THESE VALUES" to your need.
 Install this script for example on a Raspberry PI and schedule crontab to run it every 5 minutes!
