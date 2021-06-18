@@ -11,11 +11,11 @@ import pandas as pd
 from datetime import datetime
 from statistics import mean
 
-#ONLY CHANGE THESE VALUES
-url = "http://<IP OF ECU>/index.php/realtimedata"
+#CHANGE TO ECU IP
+url = "http://ECUIP/index.php/realtimedata"
 URL = "https://pvoutput.org/service/r1/addstatus.jsp"
-APIID = "xxxxxx"
-SYSTEMID = "xxxxxx"
+APIID = "XXXXX"
+SYSTEMID = "XXXXX"
 
 #Basic Vars
 page = requests.get(url)
@@ -25,7 +25,7 @@ tmp = table.find_all('tr')
 
 # fix_rowspan
 first = tmp[0]
-allRows = tmp[1:-1]
+allRows = tmp[1:len(tmp)]
 headers = [header.get_text() for header in first.find_all('th')]
 results = [[data.get_text() for data in row.find_all('td')] for row in allRows]
 rowspan = []
@@ -49,19 +49,25 @@ res3 = []
 res4 = []
 for result in results:
     print("Inverter ID: {}".format(result[0].replace(" ","")))
+#    print("Current Power: {}".format(result[1].replace(" ","")))
     for i in result[1].split():
         if i.isdigit():
             res1.append(int(i))
             print("(Filtered) Current Power: {}".format(i))
     print("Grid Frequency: {}".format(result[2].replace(" ","")))
+#    print("Grid Voltage: {}".format(result[3].replace(" ","")))
     for voltage in result[3].split():
         if voltage.isdigit():
             res3.append(int(voltage))
             print("(Filtered) Voltage: {}".format(voltage))
+#    print("Temperature: {}".format(result[4].replace(" ","")))
     for temp in result[4].split():
         if temp.isdigit():
             res4.append(int(temp))
             print("(Filtered) Temp: {}".format(temp))
+#    print("Reporting Time: {}".format(result[5].lstrip().replace("\n","")))
+#    wattage = int(result[1].replace(" ","").replace("W",""))
+#    print("Watt: {}".format(wattage))
     datum = format(result[5]).strip().replace("\n","")
     date_time_obj = datetime. strptime(datum, '%Y-%m-%d %H:%M:%S')
     date = date_time_obj.strftime("%Y%m%d")
@@ -88,3 +94,6 @@ print("Average inverter voltage:",avaragevoltage)
 #Pushing to PVOUTPUT
 gegevens = {'sid':SYSTEMID,'key':APIID,'d':date,'t':time,'v2':totalpower,'v5':avgtemp,'v6':avaragevoltage}
 r = requests.get(URL,params=gegevens)
+
+#DEBUG
+#print(r.content)
