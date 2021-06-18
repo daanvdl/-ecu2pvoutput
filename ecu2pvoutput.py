@@ -11,11 +11,13 @@ import pandas as pd
 from datetime import datetime
 from statistics import mean
 
-#CHANGE TO ECU IP
+#ONLY CHANGE THESE VALUES
 url = "http://ECUIP/index.php/realtimedata"
-URL = "https://pvoutput.org/service/r1/addstatus.jsp"
 APIID = "XXXXX"
 SYSTEMID = "XXXXX"
+
+#PVOUTPUT API
+URL = "https://pvoutput.org/service/r1/addstatus.jsp"
 
 #Basic Vars
 page = requests.get(url)
@@ -49,25 +51,19 @@ res3 = []
 res4 = []
 for result in results:
     print("Inverter ID: {}".format(result[0].replace(" ","")))
-#    print("Current Power: {}".format(result[1].replace(" ","")))
     for i in result[1].split():
         if i.isdigit():
             res1.append(int(i))
             print("(Filtered) Current Power: {}".format(i))
     print("Grid Frequency: {}".format(result[2].replace(" ","")))
-#    print("Grid Voltage: {}".format(result[3].replace(" ","")))
     for voltage in result[3].split():
         if voltage.isdigit():
             res3.append(int(voltage))
             print("(Filtered) Voltage: {}".format(voltage))
-#    print("Temperature: {}".format(result[4].replace(" ","")))
     for temp in result[4].split():
         if temp.isdigit():
             res4.append(int(temp))
             print("(Filtered) Temp: {}".format(temp))
-#    print("Reporting Time: {}".format(result[5].lstrip().replace("\n","")))
-#    wattage = int(result[1].replace(" ","").replace("W",""))
-#    print("Watt: {}".format(wattage))
     datum = format(result[5]).strip().replace("\n","")
     date_time_obj = datetime. strptime(datum, '%Y-%m-%d %H:%M:%S')
     date = date_time_obj.strftime("%Y%m%d")
