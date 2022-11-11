@@ -1,4 +1,4 @@
-Upload data from AP Systems solar inverters (APS) ECU (version C1.1.8 & C1.1.9) automatically to PV Output
+Upload data from AP Systems solar inverters (APS) ECU (version 2.1.2) automatically to PV Output
 
 Edit de variables below "#ONLY CHANGE THESE VALUES".
 url = "http://ECUIP/index.php/realtimedata" -> ECUIP = local IP of your ECU-R.
