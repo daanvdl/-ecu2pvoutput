@@ -56,15 +56,15 @@ for result in results:
             res1.append(int(i))
             print("(Filtered) Current Power: {}".format(i))
     print("Grid Frequency: {}".format(result[2].replace(" ","")))
-    for voltage in result[3].split():
+    for voltage in result[2].split():
         if voltage.isdigit():
             res3.append(int(voltage))
             print("(Filtered) Voltage: {}".format(voltage))
-    for temp in result[4].split():
+    for temp in result[5].split():
         if temp.isdigit():
             res4.append(int(temp))
             print("(Filtered) Temp: {}".format(temp))
-    datum = format(result[5]).strip().replace("\n","")
+    datum = format(result[6]).strip().replace("\n","")
     date_time_obj = datetime. strptime(datum, '%Y-%m-%d %H:%M:%S')
     date = date_time_obj.strftime("%Y%m%d")
     time = date_time_obj.strftime("%H:%M")
