@@ -8,6 +8,7 @@ from lxml.html import fromstring
 import re
 import csv
 import pandas as pd
+import mysql.connector
 from datetime import datetime
 from statistics import mean
 
@@ -18,6 +19,14 @@ SYSTEMID = "XXXXX"
 
 #PVOUTPUT API
 URL = "https://pvoutput.org/service/r1/addstatus.jsp"
+
+#MYSQL connection
+mydb = mysql.connector.connect(
+  host="host",
+  user="username",
+  password="password",
+  database="database"
+)
 
 #Basic Vars
 page = requests.get(url)
@@ -50,24 +59,33 @@ res1 = []
 res3 = []
 res4 = []
 for result in results:
+    print(result)
     print("Inverter ID: {}".format(result[0].replace(" ","")))
     for i in result[1].split():
         if i.isdigit():
             res1.append(int(i))
             print("(Filtered) Current Power: {}".format(i))
     print("Grid Frequency: {}".format(result[2].replace(" ","")))
-    for voltage in result[3].split():
+    for voltage in result[2].split():
         if voltage.isdigit():
             res3.append(int(voltage))
             print("(Filtered) Voltage: {}".format(voltage))
-    for temp in result[4].split():
+    for temp in result[5].split():
         if temp.isdigit():
             res4.append(int(temp))
             print("(Filtered) Temp: {}".format(temp))
-    datum = format(result[5]).strip().replace("\n","")
+    datum = format(result[6]).strip().replace("\n","")
     date_time_obj = datetime. strptime(datum, '%Y-%m-%d %H:%M:%S')
     date = date_time_obj.strftime("%Y%m%d")
     time = date_time_obj.strftime("%H:%M")
+    
+    #ADD Records to database
+    mycursor = mydb.cursor()
+    sql = "INSERT INTO ec2db (Panel, Current_Power, DC_Voltage, Grid_Frequency, Grid_Voltage, Temperature, Reporting_Time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    val = (format(result[0].replace(" ","")), result[1].split()[0], result[2].split()[0], result[3].split()[0], result[4].split()[0], result[5].split()[0], date_time_obj)
+    mycursor.execute(sql, val)
+    mydb.commit()   
+    
     print("Date: {}".format(date))
     print("Time: {}".format(time))
     print("\n")
@@ -89,6 +107,7 @@ print("Average inverter voltage:",avaragevoltage)
 
 #Pushing to PVOUTPUT
 gegevens = {'sid':SYSTEMID,'key':APIID,'d':date,'t':time,'v2':totalpower,'v5':avgtemp,'v6':avaragevoltage}
+
 r = requests.get(URL,params=gegevens)
 
 #DEBUG
